@@ -1,1 +1,24 @@
+steps:
+  - uses: actions/checkout@v4
 
+  - name: Unzip source
+    run: unzip GoldNX_full_android_only_under100mb_v13.zip -d source
+
+  - uses: actions/setup-java@v4
+    with:
+      distribution: temurin
+      java-version: '17'
+
+  - uses: android-actions/setup-android@v3
+
+  - name: Make Gradle executable
+    run: chmod +x source/apps/android/gradlew
+
+  - name: Build APK
+    working-directory: source/apps/android
+    run: ./gradlew assembleDebug --stacktrace --no-daemon
+
+  - uses: actions/upload-artifact@v4
+    with:
+      name: goldnx-player-apk
+      path: source/apps/android/app/build/outputs/apk/debug/*.apk
