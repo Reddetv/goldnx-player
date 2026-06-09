@@ -13,12 +13,17 @@ jobs:
       - name: Unzip source
         run: unzip GoldNX_full_android_only_under100mb_v13.zip -d source
 
-      - uses: actions/setup-java@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
       - uses: android-actions/setup-android@v3
+
+      - name: Download MPV native libraries
+        working-directory: source/apps/android/Vendor/libmpv-android
+        run: make
 
       - name: Make Gradle executable
         run: chmod +x source/apps/android/gradlew
